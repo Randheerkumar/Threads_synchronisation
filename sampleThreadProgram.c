@@ -82,12 +82,8 @@ void consume(int thread_No){
 		{	
 			//smutex_lock(&lock);
 			if(limit > 999) {
-				//scond_wait(&cwait,&lock);
-				//smutex_unlock(&lock);
 				return ;
 			}
-			//smutex_unlock(&lock);
-			//printf("you are in consumer fn , buffer_size is%d",buffer_size);
 			smutex_lock(&lock);
 			if(buffer_size > 0){
 				no_of_c[thread_No]++;
@@ -97,14 +93,11 @@ void consume(int thread_No){
 
 			else{
 				wait_c[thread_No]++;
-				//thread_yield();
 				scond_wait(&cwait,&lock);
 				
 			}
 			smutex_unlock(&lock);
 			if(limit > 999) {
-				//scond_wait(&cwait,&lock);
-				//smutex_unlock(&lock);
 				return ;
 			}
 
@@ -116,7 +109,6 @@ void consume(int thread_No){
 
 int main(int argc,char** argv){
 	
-	//long exitValue;
 	int i;
 
 	if(argc > 2)
@@ -155,14 +147,6 @@ int main(int argc,char** argv){
 		thread_create(&(threads[i]),&go,i);
 	}
 
-	// while(count < 10){
-	// 	 scond_wait(&wait,&lock);
-	// 	scond_signal(&wait,&lock);
-	// }
-	// scond_broadcast(&wait,&lock);
-
-	
-
     while( count < n);
 
 	 printf("master thread is %d \n", master_idx);
@@ -173,11 +157,6 @@ int main(int argc,char** argv){
  while(stop_cond==0){
  	thread_yield();
  }
-
-// for(i=0;i<n;i++){
-// 		thread_join(threads[i]);
-// 		//printf("Thread %d returned with %ld\n",i,exitValue);
-// 	}
  thread_join(threads[master_idx]);
  
  printf("no of times\n");
@@ -227,16 +206,9 @@ count++;
     }
 
   
- //scond_wait(&wait,&lock);
  smutex_unlock(&lock);
 
- //printf("randheer\n");
-
-//smutex_lock(&lock);
-
   if(master_idx==ith_thread){
-  	//printf("you are in master thread and part2 is %d\n",part2);
-  		//smutex_lock(&lock);
 				while(ii < p){
 			  				if(m == master_idx){
 			  					m++;
@@ -253,15 +225,11 @@ count++;
 			  				}
 			  				consumer[jj++]=m++;
 			  	}
-			// smutex_unlock(&lock);
 			  	
 			  	part2=1;
 			  	scond_broadcast(&wait,&lock);
-			  	//scond_broadcast(&cwait,&lock);
-			  	//scond_broadcast(&pwait,&lock);
 			  		while(true){
 			  				smutex_lock(&lock);
-                           //printf("%d\n",limit);
 			  				if(limit > 999){
 			  					smutex_unlock(&lock);
 						  		break;
@@ -273,21 +241,17 @@ count++;
 			  				scond_broadcast(&cwait,&lock);
 			  				scond_broadcast(&pwait,&lock);
 
-			  				//else scond_broadcast(&wait,&lock);
 			  		}
 			  		stop_cond=1;
 			  		for(int i=0; i<p; i++){
-			  				//scond_signal(&pwait,&lock);
 			  				thread_join(threads[producer[i]]);
 			  			}
   					for(int i=0; i<c; i++)
   					{
-  						//scond_signal(&cwait,&lock);
+  					
   					thread_join(threads[consumer[i]]);
   					}
-			  		
-
-			  		//thread_join(threads[master_idx]);	  	
+			  			  	
 
 }
 		  
@@ -303,17 +267,6 @@ count++;
 
   		if(isProducer(ith_thread,producer)){
   			produce(ith_thread);
-  			// if(limit > 999){
-  			// 	//while(true)
-  			// 		//thread_join(threads[producer[i]]);
-  			// 		//thread_exit(100+ith_thread);
-  			// 		//return ;
-  			// 		//thread_join(threads[producer[i]]);
-  			// }
-  			
-  			//smutex_unlock(&lock);
-  			
-  	
 
   		}
   		else{
